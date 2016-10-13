@@ -1,0 +1,35 @@
+.row{
+    position: relative;
+}
+
+.row>div{
+    position: absolute;
+}
+
+#hist{
+    top: 0px;
+    left: 730px;
+}
+
+.line {
+    fill: none;
+    stroke-width: 1.5px;
+}
+
+.line0 {
+    stroke: steelblue;
+}
+
+.axis--x text {
+    font: 10px sans-serif;
+}
+
+.axis--y text {
+    font: oblique 15px Georgia, serif;
+}
+
+.axis path, .axis line {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+}

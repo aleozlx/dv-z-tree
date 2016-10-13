@@ -1,5 +1,6 @@
 var ztree = ztree || {};
 var d3 = d3 || {};
+var hist = hist || {};
 
 var transformer = new ztree.Transformation(5);
 
@@ -93,6 +94,8 @@ var column = row.selectAll(".square")
         	highlightBlock(hierarchy[level].highlight, color_scale(hierarchy.length-level));
         current_label.text(z_order)
 	        .attr("x", d.x+d.width/2).attr("y", d.y+d.height/2);
+	    hist.visit_z_order(z_order);
+	    hist.visit_row_oriented(d.i*16+d.j);
     });
 
 var current_label = row.append("svg:text")

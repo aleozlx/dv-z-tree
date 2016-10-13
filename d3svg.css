@@ -11,6 +11,11 @@
     left: 730px;
 }
 
+#hist2{
+    top: 370px;
+    left: 730px;
+}
+
 .line {
     fill: none;
     stroke-width: 1.5px;
@@ -18,6 +23,10 @@
 
 .line0 {
     stroke: steelblue;
+}
+
+.line1 {
+    stroke: #f54242;
 }
 
 .axis--x text {

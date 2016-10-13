@@ -49,19 +49,44 @@ ztree.Transformation.prototype.inverse = function(z){
     return [si, sj];
 };
 
-ztree.getZHierarchy = function(z, level){
-    var b = new Array(level - 1);
-    for(var k = level - 1;k--;){
-        var t = (1<<k); t *= t;
-        b[k] = [[Math.floor(z / t), k],1];
+ztree.Transformation.prototype.getHierarchy = function(z){
+    var b = new Array(this.dim);
+    for(var k=this.dim;k--;){
+        var t = this.a2[k];
+        var bz = Math.floor(z / t);
+        var bij = this.inv(bz);
+        b[k] = {
+            highlight: [bij[0], bij[1], bij[0]+t, bij[1]+t], 
+            z_order: bz, 
+            level: k
+        };
         z %= t;
     }
+    // for(var k=0;k<)
     return b;
 };
 
-var H=ztree.getZHierarchy(14,5);
-for(var ii=0;ii<H.length;++ii)
-console.log(H[ii][0]);
+ztree.getZHierarchy = function(z, level){
+    var b = new Array(level - 1), k;
+    for(k = level - 1;k--;){
+        var a = (1<<k), a2 = a*a;
+        var bz = Math.floor(z / a2);
+        var bij = [[0,0],[0,1],[1,0],[1,1]][bz];
+        b[k] = {
+            highlight: [bij[0]*a, bij[1]*a, bij[0]*a+a, bij[1]*a+a], 
+            z_order: bz, 
+            level: k
+        };
+        z %= a2;
+    }
+    for(k=b.length-2;k>=0;--k){
+        b[k].highlight[0]+=b[k+1].highlight[0];
+        b[k].highlight[1]+=b[k+1].highlight[1];
+        b[k].highlight[2]+=b[k+1].highlight[0];
+        b[k].highlight[3]+=b[k+1].highlight[1];
+    }
+    return b;
+};
 
 ztree.Transformation.prototype.validate = function(){
     var ct=0, N=this.dim*this.dim;
@@ -78,4 +103,7 @@ ztree.useFastZIndexing = function(transformation){
         undilation = {0:0,1:1,4:2,5:3,0x10:4,0x11:5,0x14:6,0x15:7,0x40:8,0x41:9,0x44:10,0x45:11,0x50:12,0x51:13,0x54:14,0x55:15};
     transformation.transform = function(i, j){ return (dilation[i]<<1)|dilation[j]; };
     transformation.inverse = function(z){ return [undilation[(z&0xAA)>>1],undilation[z&0x55]]; };
+    transformation.getHierarchy = function(z){
+        return ztree.getZHierarchy(z, transformation.dim + 1);
+    };
 };

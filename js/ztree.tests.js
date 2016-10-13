@@ -18,8 +18,30 @@ ztree.tests = [
     },
     function(){
         return new ztree.Transformation(6).validate();
+    },
+    function(){
+        return ztree.tests.validate_z_hierarchy(ztree.getZHierarchy(14,4), ztree.tests._z_hierarchy_ans);
+    },
+    function(){
+        return ztree.tests.validate_z_hierarchy(new ztree.Transformation(4).getHierarchy(14), ztree.tests._z_hierarchy_ans);
     }
 ];
+
+ztree.tests._z_hierarchy_ans = [
+    {highlight: "1,0,2,1", z_order:2, level:0},
+    {highlight: "1,1,5,5", z_order:3, level:1},
+    {highlight: "0,0,16,16", z_order:0, level:2}
+];
+
+ztree.tests.validate_z_hierarchy = function(y, t){
+    var r = true;
+    for(var ii=0;ii<t.length;++ii){
+        r = r && y[ii].z_order == t[ii].z_order;
+        r = r && y[ii].level == t[ii].level;
+        r = r && y[ii].highlight.toString() == t[ii].highlight;
+    }
+    return {isValid: r};
+};
 
 ztree.tests.runAll = function(){
     var ct=0, N=ztree.tests.length;
